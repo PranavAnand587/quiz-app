@@ -4,8 +4,13 @@ function Quiz() {
 
     const [data, setData] = useState("none")
     const [questionNo, setQuestionNo] = useState(1)
-    const [options, setOptions] = useState([])
+    const [options, setOptions] = useState([[],[],[],[],[],[],[],[],[],[]])
+    const [locked, setLocked] = useState(false)
+    // const [points, setPoints] = useState(0)
 
+    const all_opt = [[],[],[],[],[],[],[],[],[],[]]
+
+    // Shuffling the options
     function shuffle(array) {
         var currentIndex = array.length, temporaryValue, randomIndex;
 
@@ -22,28 +27,69 @@ function Quiz() {
         return array;
     }
 
+    //Fetch the database of questions
     useEffect(() => {
         async function fetchData() {
-            const res = await fetch("https://opentdb.com/api.php?amount=1&difficulty=easy&type=multiple")
+            const res = await fetch("https://opentdb.com/api.php?amount=10&difficulty=easy&type=multiple")
             const _data = await res.json()
             console.table(_data.results)
-            setData(_data.results[0])
-            const options = _data.results[0].incorrect_answers
-            options.push(_data.results[0].correct_answer)
-            shuffle(options)
-            setOptions(options)
+            setData(_data.results)
+
+            for (let i = 0; i < _data.results.length; i++) {
+                const opt = _data.results[i].incorrect_answers
+                opt.push(_data.results[i].correct_answer)
+                shuffle(opt)
+                all_opt[i]=opt
+                setOptions(all_opt)
+            }
         }
         fetchData()
-    }, [questionNo])
+    }, [])
+    
+    const handleChange = e => {
+        setLocked(!locked)
+    }
 
     return (
         <div>
-            <p>{questionNo}) {data.question}</p>
-            <input type="radio" name="choice" id="val1" /><label for="val1">{options[0]}</label>
-            <input type="radio" name="choice" id="val2" /><label for="val2">{options[1]}</label>
-            <input type="radio" name="choice" id="val3" /><label for="val3">{options[2]}</label>
-            <input type="radio" name="choice" id="val4" /><label for="val4">{options[3]}</label>
-            <button onClick={() => setQuestionNo(questionNo + 1)}>Next</button>
+            {/* <h3>Points : {points}</h3> */}
+            <p>{questionNo}) {data[questionNo-1].question}</p>
+            <input 
+                type="radio" 
+                name="choice" 
+                id="val1"
+                checked={locked}
+                onChange={handleChange} 
+            />
+            <label for="val1">{options[questionNo-1][0]}</label>
+            <input 
+                type="radio" 
+                name="choice" 
+                id="val2"
+                checked={locked}
+                onChange={handleChange} 
+            />
+            <label for="val2">{options[questionNo-1][1]}</label>
+            <input 
+                type="radio" 
+                name="choice" 
+                id="val3"
+                checked={locked}
+                onChange={handleChange} 
+            />
+            <label for="val3">{options[questionNo-1][2]}</label>
+            <input 
+                type="radio" 
+                name="choice" 
+                id="val4"
+                checked={locked}
+                onChange={handleChange} 
+            />
+            <label for="val4">{options[questionNo-1][3]}</label>
+
+            {(questionNo === 10) ? null : <button onClick={() => setQuestionNo(questionNo+1)}>Next</button>}
+            {(questionNo === 1) ? null : <button onClick={() => setQuestionNo(questionNo-1)}>Back</button>}
+
         </div>
     )
 }
