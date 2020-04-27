@@ -3,11 +3,16 @@ import React, { useEffect, useState } from "react"
 function Quiz() {
 
     const [data, setData] = useState("none")
+
     const [questionNo, setQuestionNo] = useState(1)
     const [options, setOptions] = useState([[],[],[],[],[],[],[],[],[],[]])
-    const [locked, setLocked] = useState(false)
-    // const [points, setPoints] = useState(0)
+    const [correctOptions,setCorrectOptions] = useState([])
 
+    const [optionLocked,setOptionLocked] = useState()   // For Final Locked option
+    const [locked, setLocked] = useState(false) //  For current locked option
+    const [points, setPoints] = useState(0)
+
+    const correct = [0,0,0,0,0,0,0,0,0,0]
     const all_opt = [[],[],[],[],[],[],[],[],[],[]]
 
     // Shuffling the options
@@ -35,61 +40,79 @@ function Quiz() {
             console.table(_data.results)
             setData(_data.results)
 
+
             for (let i = 0; i < _data.results.length; i++) {
                 const opt = _data.results[i].incorrect_answers
                 opt.push(_data.results[i].correct_answer)
+                correct[i] = _data.results[i].correct_answer
                 shuffle(opt)
                 all_opt[i]=opt
                 setOptions(all_opt)
+                setCorrectOptions(correct)
             }
         }
         fetchData()
     }, [])
-    
-    const handleChange = e => {
-        setLocked(!locked)
+
+    const handleChange = event => {
+        const val = event.target.value
+        setOptionLocked(val)
+    }
+
+    const next = e => {
+        if(optionLocked === correctOptions[questionNo-1]){
+            setPoints(points+10)
+        }
+        setQuestionNo(questionNo+1)
+    }
+
+    const submit = () => {
+        console.log("Quiz Done! Scores Submitted");
+        
     }
 
     return (
         <div>
-            {/* <h3>Points : {points}</h3> */}
+            <h3>Points : {points}</h3>
             <p>{questionNo}) {data[questionNo-1].question}</p>
             <input 
                 type="radio" 
                 name="choice" 
                 id="val1"
-                checked={locked}
-                onChange={handleChange} 
+                value={options[questionNo-1][0]}
+                checked={optionLocked === options[questionNo-1][0]}
+                onChange={e => handleChange(e)} 
             />
             <label for="val1">{options[questionNo-1][0]}</label>
             <input 
                 type="radio" 
                 name="choice" 
                 id="val2"
-                checked={locked}
-                onChange={handleChange} 
+                value={options[questionNo-1][1]}
+                checked={optionLocked === options[questionNo-1][1]}
+                onChange={e => handleChange(e)} 
             />
             <label for="val2">{options[questionNo-1][1]}</label>
             <input 
                 type="radio" 
                 name="choice" 
                 id="val3"
-                checked={locked}
-                onChange={handleChange} 
+                value={options[questionNo-1][2]}
+                checked={optionLocked === options[questionNo-1][2]}
+                onChange={e => handleChange(e)} 
             />
             <label for="val3">{options[questionNo-1][2]}</label>
             <input 
                 type="radio" 
                 name="choice" 
                 id="val4"
-                checked={locked}
-                onChange={handleChange} 
+                value={options[questionNo-1][3]}
+                checked={optionLocked === options[questionNo-1][3]}
+                onChange={e => handleChange(e)} 
             />
             <label for="val4">{options[questionNo-1][3]}</label>
 
-            {(questionNo === 10) ? null : <button onClick={() => setQuestionNo(questionNo+1)}>Next</button>}
-            {(questionNo === 1) ? null : <button onClick={() => setQuestionNo(questionNo-1)}>Back</button>}
-
+            {(questionNo === 10) ? <button onClick={submit}>Submit</button> : <button onClick={next}>Next</button>}
         </div>
     )
 }
