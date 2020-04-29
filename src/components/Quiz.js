@@ -76,51 +76,60 @@ function Quiz() {
         console.log("Quiz Done! Scores Submitted");
     }
 
-    return ((loading === true) ? <Loading /> :
-        <div class="screen" id="quiz_menu">
-            <h3>Points : {points}</h3>
-            <p>{questionNo}) {data[questionNo-1].question}</p>
-            <div id="options">
-                <input 
-                    type="radio" 
-                    name="choice" 
-                    id="val1"
-                    value={options[questionNo-1][0]}
-                    checked={optionLocked === options[questionNo-1][0]}
-                    onChange={e => handleChange(e)} 
-                />
-                <label for="val1">{options[questionNo-1][0]}</label>
-                <input 
-                    type="radio" 
-                    name="choice" 
-                    id="val2"
-                    value={options[questionNo-1][1]}
-                    checked={optionLocked === options[questionNo-1][1]}
-                    onChange={e => handleChange(e)} 
-                />
-                <label for="val2">{options[questionNo-1][1]}</label>
-                <input 
-                    type="radio" 
-                    name="choice" 
-                    id="val3"
-                    value={options[questionNo-1][2]}
-                    checked={optionLocked === options[questionNo-1][2]}
-                    onChange={e => handleChange(e)} 
-                />
-                <label for="val3">{options[questionNo-1][2]}</label>
-                <input 
-                    type="radio" 
-                    name="choice" 
-                    id="val4"
-                    value={options[questionNo-1][3]}
-                    checked={optionLocked === options[questionNo-1][3]}
-                    onChange={e => handleChange(e)} 
-                />
-                <label for="val4">{options[questionNo-1][3]}</label>
+    return ( 
+        (loading === true) 
+            ? <Loading /> 
+            :<div class="screen" id="quiz_menu">
+                <h3>Points : {points}</h3>
+                <p>{questionNo}) {data[questionNo-1].question}</p>
+                <div id="options">
+                    <label class="container" for="val1">{options[questionNo-1][0]}
+                        <input 
+                            type="radio" 
+                            name="choice" 
+                            id="val1"
+                            value={options[questionNo-1][0]}
+                            checked={optionLocked === options[questionNo-1][0]}
+                            onChange={e => handleChange(e)} 
+                        />
+                        <span class="checkmark"/>
+                    </label>
+                    <label class="container" for="val2">{options[questionNo-1][1]}
+                        <input 
+                            type="radio" 
+                            name="choice" 
+                            id="val2"
+                            value={options[questionNo-1][1]}
+                            checked={optionLocked === options[questionNo-1][1]}
+                            onChange={e => handleChange(e)} 
+                        />
+                        <span class="checkmark"/>
+                    </label>
+                    <label class="container" for="val3">{options[questionNo-1][2]}
+                        <input 
+                            type="radio" 
+                            name="choice" 
+                            id="val3"
+                            value={options[questionNo-1][2]}
+                            checked={optionLocked === options[questionNo-1][2]}
+                            onChange={e => handleChange(e)} 
+                        />
+                        <span class="checkmark"/>
+                    </label>
+                    <label class="container" for="val4">{options[questionNo-1][3]}
+                        <input 
+                            type="radio" 
+                            name="choice" 
+                            id="val4"
+                            value={options[questionNo-1][3]}
+                            checked={optionLocked === options[questionNo-1][3]}
+                            onChange={e => handleChange(e)} 
+                        />
+                        <span class="checkmark"/>
+                    </label>
+                    </div>
+                {(questionNo === 10) ? <button type="submit" onClick={e => submit(e)}>Submit</button> : <button onClick={next}>Next</button>}
             </div>
-
-            {(questionNo === 10) ? <button type="submit" onClick={e => submit(e)}>Submit</button> : <button onClick={next}>Next</button>}
-        </div>
     )
 }
 
