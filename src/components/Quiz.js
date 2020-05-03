@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 import './Quiz.css';
 
 import Loading from './Loading';
 
-function Quiz() {
+const Quiz = props => {
   const [data, setData] = useState('none');
   const [loading, setLoading] = useState(true);
 
@@ -47,9 +48,8 @@ function Quiz() {
   // Fetch the database of questions
   useEffect(() => {
     async function fetchData() {
-      const res = await fetch(
-        "https://opentdb.com/api.php?amount=10&difficulty=easy&type=multiple"
-      );
+      const url = "https://opentdb.com/api.php?amount=10"+props.category+"&difficulty=easy&type=multiple"
+      const res = await fetch(url);
       const _data = await res.json();
       setData(_data.results);
       setLoading(false);
@@ -81,17 +81,16 @@ function Quiz() {
     setQuestionNo(questionNo + 1);
   };
 
-  const submit = (e) => {
+  const submit = () => {
     if (optionLocked === correctOptions[9]) {
       setPoints(points + 10);
-    }
-    console.log('Quiz Done! Scores Submitted');
-  };
+	}
+  props.submitScore(points);
+};
 
-  return loading === true ? (
-    <Loading />
-  ) : (
-    <div className="screen" id="quiz_menu">
+  return loading === true 
+  	? (<Loading />) 
+	  : (<div className="screen" id="quiz_menu">
 
         <h3>Points :{points}</h3>
         <p>{questionNo}) {data[questionNo-1].question}</p>
@@ -151,7 +150,7 @@ function Quiz() {
         </div>
     
     {(questionNo === 10) 
-        ? <button type="submit" onClick={(e) => submit(e)}>Submit</button> 
+        ? <Link to="/finish"><button type="submit" onClick={() => submit()}>Submit</button></Link> 
         : <button onClick={next}>Next</button>}
     </div>
     )

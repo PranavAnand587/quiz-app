@@ -1,3 +1,7 @@
+:root{
+  box-sizing: content;
+}
+
 #quiz_menu {
   width: 500px;
   height: 350px;
@@ -32,7 +36,7 @@
 
 input {
   display: inline;
-  text-align: left;
+  float: left;
 }
 
 label {
@@ -69,6 +73,7 @@ label {
   left: 0;
   height: 15px;
   width: 15px;
+  margin-left: 120px;
   background-color: #eee;
   border-radius: 50%;
 }
