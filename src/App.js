@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Switch, Route } from 'react-router-dom'
+import 'bootstrap/dist/css/bootstrap.css';
 
 import Start from "./components/Start"
 import Quiz from "./components/Quiz"
