@@ -1,11 +1,10 @@
 import React from "react"
 
-import "./Error.css"
-
 function Error() {
     return(
-        <div class="screen">
-            <h1>Oops! Page not found!!</h1>
+        <div class="container text-center">
+            <p className="display-1">404</p>
+            <p className="display-2">Oops! Page not found!!</p>
         </div>
     )
 }

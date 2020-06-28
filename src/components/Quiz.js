@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-
-import './Quiz.css';
+import he from 'he';
 
 import Loading from './Loading';
 
@@ -56,8 +55,8 @@ const Quiz = props => {
 
       for (let i = 0; i < _data.results.length; i++) {
         const opt = _data.results[i].incorrect_answers;
-        opt.push(_data.results[i].correct_answer);
-        correct[i] = _data.results[i].correct_answer;
+        opt.push(he.decode(_data.results[i].correct_answer));
+        correct[i] = he.decode(_data.results[i].correct_answer);
         shuffle(opt);
         all_opt[i] = opt;
         setOptions(all_opt);
@@ -67,7 +66,7 @@ const Quiz = props => {
     const correct = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     const all_opt = [[], [], [], [], [], [], [], [], [], []];
     fetchData();
-  }, []);
+  }, [props]);
 
   const handleChange = (event) => {
     const val = event.target.value;
@@ -90,68 +89,70 @@ const Quiz = props => {
 
   return loading === true 
   	? (<Loading />) 
-	  : (<div className="screen" id="quiz_menu">
-
-        <h3>Points :{points}</h3>
-        <p>{questionNo}) {data[questionNo-1].question}</p>
-
-        <div id="options">
-            <label className="container" htmlFor="val1">
-                {options[questionNo-1][0]}
+	  : (<div className="card">
+        <h3 className="card-header text-center">Points :{points}</h3>
+        <div className="card-body">
+          <p className="card-text text-center">{questionNo}) {he.decode(data[questionNo-1].question)}</p>
+        <div id="input-group">
+          <div className="input-group-prepend my-2">
+            <div className="input-group-text w-100">
+              <input
+                type="radio"
+                name="choice"
+                id="val1"
+                value={options[questionNo - 1][0]}
+                checked={optionLocked === options[questionNo - 1][0]}
+                onChange={(e) => handleChange(e)}
+              />
+              <span className="px-3">{options[questionNo-1][0]}</span>
+            </div>
+          </div>
+          <div className="input-group-prepend my-2">
+            <div className="input-group-text w-100">
                 <input
-                    type="radio"
-                    name="choice"
-                    id="val1"
-                    value={options[questionNo - 1][0]}
-                    checked={optionLocked === options[questionNo - 1][0]}
-                    onChange={(e) => handleChange(e)}
+                  type="radio"
+                  name="choice"
+                  id="val2"
+                  value={options[questionNo - 1][1]}
+                  checked={optionLocked === options[questionNo - 1][1]}
+                  onChange={(e) => handleChange(e)}
+                  />
+                <span className="px-3">{options[questionNo-1][1]}</span>
+            </div>
+          </div>
+          <div className="input-group-prepend my-2">
+            <div className="input-group-text w-100">
+              <input
+                type="radio"
+                name="choice"
+                id="val3"
+                value={options[questionNo - 1][2]}
+                checked={optionLocked === options[questionNo - 1][2]}
+                onChange={(e) => handleChange(e)}
                 />
-                <span className="checkmark" />
-            </label>
-
-            <label className="container" htmlFor="val2">
-                {options[questionNo-1][1]}
+              <span className="px-3">{options[questionNo-1][2]}</span>
+            </div>
+          </div>
+          <div className="input-group-prepend my-2">
+            <div className="input-group-text w-100">
                 <input
-                    type="radio"
-                    name="choice"
-                    id="val2"
-                    value={options[questionNo - 1][1]}
-                    checked={optionLocked === options[questionNo - 1][1]}
-                    onChange={(e) => handleChange(e)}
-                />
-                <span className="checkmark" />
-            </label>
-
-            <label className="container" htmlFor="val3">
-                {options[questionNo-1][2]}
-                <input
-                    type="radio"
-                    name="choice"
-                    id="val3"
-                    value={options[questionNo - 1][2]}
-                    checked={optionLocked === options[questionNo - 1][2]}
-                    onChange={(e) => handleChange(e)}
-                />
-                <span className="checkmark" />
-            </label>
-
-            <label className="container" htmlFor="val4">
-                {options[questionNo-1][3]}
-                    <input
-                        type="radio"
-                        name="choice"
-                        id="val4"
-                        value={options[questionNo - 1][3]}
-                        checked={optionLocked === options[questionNo - 1][3]}
-                        onChange={(e) => handleChange(e)}
-                    />
-                    <span className="checkmark" />
-            </label>
+                  type="radio"
+                  name="choice"
+                  id="val4"
+                  value={options[questionNo - 1][3]}
+                  checked={optionLocked === options[questionNo - 1][3]}
+                  onChange={(e) => handleChange(e)}
+                  />
+                <span className="px-3">{options[questionNo-1][3]}</span>
+            </div>
+          </div>
         </div>
-    
-    {(questionNo === 10) 
-        ? <Link to="/finish"><button type="submit" onClick={() => submit()}>Submit</button></Link> 
-        : <button onClick={next}>Next</button>}
+    <div className="text-center">
+      {(questionNo === 10) 
+          ? <Link to="/finish"><button className="btn btn-dark" type="submit" onClick={() => submit()}>Submit</button></Link> 
+          : <button className="btn btn-dark" onClick={next}>Next</button>}
+          </div>
+      </div>
     </div>
     )
 }
