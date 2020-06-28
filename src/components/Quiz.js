@@ -66,7 +66,7 @@ const Quiz = props => {
     const correct = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     const all_opt = [[], [], [], [], [], [], [], [], [], []];
     fetchData();
-  }, []);
+  }, [props]);
 
   const handleChange = (event) => {
     const val = event.target.value;
